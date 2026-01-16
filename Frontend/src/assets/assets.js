@@ -1,4 +1,4 @@
-import logo from './dmax logo.jpeg'
+import logo from './dmax_logo.jpeg'
 import add_icon from './add_icon.png'
 import order_icon from './order_icon.png'
 import upload_area from './upload_area.png'
@@ -19,11 +19,10 @@ import star_dull_icon from './star_dull_icon.png'
 import star_icon from './star_icon.png'
 import stripe_logo from './stripe_logo.png'
 import support_img from './support_img.png'
-import dmax_logo from './dmax_logo.jpeg'
+
 
 export const assets = {
     logo,
-    dmax_logo,
     add_icon,
     order_icon,
     upload_area,
