@@ -19,10 +19,22 @@ import star_dull_icon from './star_dull_icon.png'
 import star_icon from './star_icon.png'
 import stripe_logo from './stripe_logo.png'
 import support_img from './support_img.png'
+import handbag from './handbag.png'
+import ofz from './ofz.png'
+import primary from './primary.png'
+import school from './school.png'
+import travel from './travel.png'
+import hand from './hand.png'
 
 
 export const assets = {
     logo,
+    hand,
+    handbag,
+    ofz,
+    primary,
+    school,
+    travel,
     add_icon,
     order_icon,
     upload_area,
