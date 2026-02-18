@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, MoveRight, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, MoveRight } from 'lucide-react';
 import { assets } from '../assets/assets';
 
 const Hero = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
@@ -38,41 +37,41 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative w-full min-h-screen lg:h-[85vh] bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col items-center justify-start pt-12 lg:pt-10 overflow-hidden font-sans z-10"
+      className="relative w-full min-h-screen lg:h-[90vh] bg-[#FDFDFD] flex flex-col items-center justify-start pt-12 lg:pt-10 overflow-hidden font-sans z-10"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       
-      {/* 1. BRAND IDENTITY BADGE */}
-      <div className="absolute top-6 right-2 lg:top-8 lg:right-6 z-50">
-        <div className="bg-white/95 backdrop-blur-xl px-4 lg:px-6 py-2 lg:py-3 rounded-xl lg:rounded-[1.5rem] border border-blue-600/30 flex items-center gap-3 lg:gap-5 shadow-lg">
-          <img src={assets.logo} alt="Dmax" className="h-5 lg:h-7 w-auto object-contain" />
-          <div className="w-[1.5px] h-4 lg:h-5 bg-gray-300" />
-          <span className="text-[7px] lg:text-[9px] font-black tracking-[0.1em] lg:tracking-[0.15em] text-gray-800 uppercase italic">A Style for Every Story</span>
+      {/* 1. BRAND IDENTITY BADGE - Refined with neutral tones and champagne accents */}
+      <div className="absolute top-6 right-4 lg:top-8 lg:right-8 z-50">
+        <div className="bg-white/80 backdrop-blur-2xl px-5 lg:px-8 py-3 lg:py-4 rounded-full border border-neutral-100 flex items-center gap-4 lg:gap-6 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)]">
+          <img src={assets.logo} alt="Dmax" className="h-4 lg:h-6 w-auto object-contain grayscale opacity-80" />
+          <div className="w-[1px] h-4 bg-neutral-200" />
+          <span className="text-[8px] lg:text-[10px] font-bold tracking-[0.4em] text-[#B8987E] uppercase italic">A Style for Every Story</span>
         </div>
       </div>
 
-      {/* 2. BACKGROUND ARCHITECTURE */}
-      <div className="absolute inset-0 flex items-start justify-center pt-20 lg:pt-16 pointer-events-none select-none z-0">
+      {/* 2. BACKGROUND ARCHITECTURE - Editorial Outline Typography */}
+      <div className="absolute inset-0 flex items-start justify-center pt-24 lg:pt-20 pointer-events-none select-none z-0">
         <AnimatePresence mode="wait">
           <motion.h2
             key={`bg-text-${activeIndex}`}
-            initial={{ opacity: 0, scale: 0.9, y: 50 }}
-            animate={{ opacity: [0.02, 0.04, 0.02], scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 1.1, y: -50 }}
-            transition={{ duration: 1.5, ease: "circOut" }}
-            className="text-[15vw] sm:text-[18vw] lg:text-[25vw] font-extrabold uppercase tracking-tight text-black/5 leading-none px-4 text-center"
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={{ opacity: 0.04, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05, y: -30 }}
+            transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[18vw] font-serif italic uppercase tracking-tighter text-black leading-none px-4 text-center"
           >
             {activeItem.title}
           </motion.h2>
         </AnimatePresence>
       </div>
 
-      {/* 3. PRODUCT GALLERY: Shifted up to relieve top spacing */}
-      <div className="relative w-full h-[65vh] lg:h-[75%] flex items-center justify-center px-4 sm:px-6 lg:px-12 z-20 mt-2 lg:mt-0">
-        <div className="relative w-full max-w-[1400px] h-full flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
-          <div className="relative w-full h-full flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 lg:overflow-visible snap-x snap-mandatory">
+      {/* 3. PRODUCT GALLERY - Enhanced with "Liquid" transitions and premium shadows */}
+      <div className="relative w-full h-[65vh] lg:h-[75%] flex items-center justify-center px-4 sm:px-6 lg:px-12 z-20 mt-4 lg:mt-0">
+        <div className="relative w-full max-w-[1500px] h-full flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8">
+          <div className="relative w-full h-full flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 lg:overflow-visible">
             {collections.map((item, index) => {
               const isActive = activeIndex === index;
               return (
@@ -81,51 +80,53 @@ const Hero = () => {
                   onClick={() => setActiveIndex(index)}
                   layout
                   className={`
-                    relative cursor-pointer overflow-hidden group transition-all duration-1000 ease-[cubic-bezier(0.23, 1, 0.32, 1)]
-                    flex-shrink-0 snap-center
+                    relative cursor-pointer overflow-hidden transition-all duration-1000 cubic-bezier(0.23, 1, 0.32, 1)
+                    flex-shrink-0
                     ${isActive 
-                      ? 'lg:flex-[4] w-full lg:w-auto rounded-3xl lg:rounded-[4rem] h-full shadow-2xl transition-shadow' 
-                      : 'lg:flex-[0.8] w-3/4 lg:w-auto rounded-2xl lg:rounded-[2rem] h-[50%] lg:h-[80%] opacity-30 grayscale hover:opacity-50'}
+                      ? 'lg:flex-[5] w-full lg:w-auto rounded-[2.5rem] lg:rounded-[5rem] h-full shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] border border-white/50' 
+                      : 'lg:flex-[0.6] w-3/4 lg:w-auto rounded-3xl lg:rounded-[3rem] h-[45%] lg:h-[70%] opacity-20 grayscale hover:opacity-40 transition-all'}
                   `}
                 >
                   <div className="absolute inset-0 bg-white">
                     <motion.img 
                       src={item.img} 
-                      animate={{ scale: isActive ? 1.05 : 1.3, filter: isActive ? 'blur(0px)' : 'blur(4px)' }}
-                      transition={{ duration: 1.2 }}
-                      className={`w-full h-full ${isActive ? 'object-contain p-8 lg:p-12' : 'object-cover'}`} 
-                      alt={item.title} 
+                      animate={{ scale: isActive ? 1.02 : 1.4, filter: isActive ? 'blur(0px)' : 'blur(8px)' }}
+                      transition={{ duration: 1.5, ease: "circOut" }}
+                      className={`w-full h-full ${isActive ? 'object-contain p-10 lg:p-20' : 'object-cover'}`} 
+                      alt="" 
                     />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/10" />
                   </div>
 
                   <AnimatePresence>
                     {isActive && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 z-30">
-                        {/* UPDATED: EXPLORE BUTTON - Moved further down and right */}
+                        {/* EXPLORE BUTTON - Reimagined as a prestige seal */}
                         <motion.div 
-                          initial={{ scale: 0.8, opacity: 0 }} 
-                          animate={{ scale: 1, opacity: 1 }} 
-                          className="absolute bottom-12 right-2 lg:bottom-16 lg:right-6"
+                          initial={{ y: 20, opacity: 0 }} 
+                          animate={{ y: 0, opacity: 1 }} 
+                          className="absolute bottom-10 right-6 lg:bottom-16 lg:right-12"
                         >
                           <motion.button 
                             whileHover={{ scale: 1.05 }} 
-                            className="flex items-center gap-3 lg:gap-5 bg-gradient-to-r from-black via-gray-900 to-gray-800 text-white px-5 lg:px-8 py-3 lg:py-4 rounded-xl lg:rounded-2xl font-bold text-[9px] lg:text-[11px] tracking-widest transition-all uppercase group shadow-2xl"
+                            className="group flex items-center gap-5 bg-black text-white px-8 lg:px-12 py-4 lg:py-5 rounded-full font-black text-[10px] lg:text-[12px] tracking-[0.4em] transition-all uppercase shadow-2xl overflow-hidden relative"
                           >
-                            <span>Explore</span>
-                            <div className="w-5 h-5 lg:w-7 lg:h-7 bg-white text-black rounded-lg flex items-center justify-center transition-transform group-hover:rotate-45">
-                               <ArrowUpRight size={12} />
+                            <span className="relative z-10">Explore</span>
+                            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-[#B8987E] text-white rounded-full flex items-center justify-center relative z-10 transition-transform group-hover:rotate-45">
+                               <ArrowUpRight size={18} />
                             </div>
+                            <div className="absolute inset-0 bg-[#B8987E] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                           </motion.button>
                         </motion.div>
 
-                        {/* Title Typography */}
-                        <div className="absolute inset-x-0 bottom-0 p-6 lg:p-12 bg-gradient-to-t from-white/95 via-transparent to-transparent pointer-events-none">
-                          <div className="space-y-2 lg:space-y-4">
-                            <div className="flex items-center gap-2 lg:gap-3">
-                              <span className="h-px w-6 lg:w-12 bg-black/20" />
-                              <span className="text-[8px] lg:text-[10px] font-black tracking-[0.3em] uppercase text-black/40">{item.subtitle}</span>
+                        {/* Title Typography - Serif & Italic for luxury feel */}
+                        <div className="absolute inset-x-0 bottom-0 p-8 lg:p-16 bg-gradient-to-t from-white/80 via-transparent to-transparent pointer-events-none">
+                          <div className="space-y-3 lg:space-y-6">
+                            <div className="flex items-center gap-4">
+                              <span className="h-[1px] w-8 lg:w-16 bg-[#B8987E]/40" />
+                              <span className="text-[10px] lg:text-[11px] font-black tracking-[0.6em] uppercase text-[#B8987E]">{item.subtitle}</span>
                             </div>
-                            <h1 className="text-4xl lg:text-7xl xl:text-8xl font-serif italic text-slate-900 tracking-tighter leading-none">
+                            <h1 className="text-4xl lg:text-7xl xl:text-8xl font-serif italic text-[#1A1A1A] uppercase tracking-tighter leading-none">
                               {item.title}
                             </h1>
                           </div>
@@ -140,20 +141,33 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* 4. NAVIGATION PROGRESS */}
-      <div className="hidden lg:flex absolute bottom-10 w-full max-w-[1400px] justify-between items-center px-12 z-40">
-        <div className="flex gap-4">
+      {/* 4. NAVIGATION PROGRESS - Champagne Gold Accents */}
+      <div className="hidden lg:flex absolute bottom-12 w-full max-w-[1500px] justify-between items-center px-16 z-40">
+        <div className="flex gap-5">
           {collections.map((_, i) => (
-            <div key={i} className={`h-1.5 transition-all duration-700 rounded-full ${activeIndex === i ? 'w-24 bg-black' : 'w-4 bg-black/10'}`} />
+            <div key={i} className="relative h-1 w-16 bg-neutral-100 rounded-full overflow-hidden">
+               <motion.div 
+                  initial={false}
+                  animate={{ width: activeIndex === i ? '100%' : '0%' }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-[#B8987E]" 
+               />
+            </div>
           ))}
         </div>
+        
         <button 
           onClick={() => setActiveIndex(prev => (prev + 1) % collections.length)} 
-          className="w-16 h-16 rounded-full border border-gray-200 bg-white shadow-lg flex items-center justify-center text-black hover:bg-black hover:text-white transition-all group"
+          className="w-16 h-16 rounded-full border border-neutral-100 bg-white/50 backdrop-blur-xl shadow-xl flex items-center justify-center text-neutral-800 hover:bg-black hover:text-white transition-all duration-700 group"
         >
           <MoveRight size={24} className="group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeInUp { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      `}} />
     </section>
   );
 };
