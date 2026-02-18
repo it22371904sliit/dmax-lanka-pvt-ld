@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { assets } from '../assets/assets'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { ShopContext } from '../Context/ShopContext'
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
+    
+    const { getCartCount, navigate } = useContext(ShopContext);
 
     // Close mobile menu when route changes
     useEffect(() => {
@@ -28,12 +31,14 @@ const Navbar = () => {
         } else {
             document.body.style.overflow = 'unset';
         }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
     }, [visible]);
 
-    const navItems = ['HOME', 'COLLECTION', 'ABOUT', 'CONTACT'];
+    const navItems = [
+        { name: 'HOME', path: '/' },
+        { name: 'COLLECTION', path: '/collection' },
+        { name: 'ABOUT', path: '/about' },
+        { name: 'CONTACT', path: '/contact' }
+    ];
 
     return (
         <nav className={`sticky top-0 z-50 w-full transition-all duration-300 ${
@@ -42,65 +47,38 @@ const Navbar = () => {
                 : 'bg-white border-b border-gray-100'
         }`}>
             
-            {/* Main Navigation Container - Logo pushed to far left */}
-            <div className='max-w-7xl mx-auto flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8 font-medium'>
+            <div className='max-w-[1440px] mx-auto flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 font-medium'>
                 
-                {/* --- Left Side: Logo & Mobile Menu Button - SHIFTED FAR LEFT --- */}
-                <div className='flex items-center gap-2 -ml-3 sm:-ml-4 lg:-ml-6'>
-                    {/* Mobile Menu Toggle Button */}
-                    <button 
-                        onClick={() => setVisible(!visible)}
-                        className='sm:hidden p-2 -ml-1 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors duration-200'
-                        aria-label="Toggle menu"
-                    >
-                        {visible ? (
-                            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        ) : (
-                            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        )}
-                    </button>
+                {/* --- 1. LEFT: LOGO --- */}
+                <Link to='/' className='flex items-center gap-2 group flex-shrink-0'>
+                    <img 
+                        src={assets.logo} 
+                        className='w-10 sm:w-12 object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105' 
+                        alt="Dmax Lanka" 
+                    />
+                    <div className='flex flex-col leading-tight'>
+                        <span className='text-lg sm:text-xl font-extrabold tracking-wide text-slate-900 uppercase'>
+                            Dmax Lanka
+                        </span>
+                        <span className='text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase mt-0.5 hidden sm:block'>
+                            Private Limited
+                        </span>
+                    </div>
+                </Link>
 
-                    {/* Logo - Pushed to far far left */}
-                    <Link 
-                        to='/' 
-                        className='flex items-center gap-2 group flex-shrink-0 sm:-ml-6 lg:-ml-8'
-                        onClick={() => setVisible(false)}
-                    >
-                        <img 
-                            src={assets.logo} 
-                            className='w-12 sm:w-14 object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105' 
-                            alt="Dmax Lanka" 
-                        />
-                        
-                        {/* Brand Name - Always visible on mobile */}
-                        <div className='flex flex-col leading-tight'>
-                            <span className='text-lg sm:text-xl font-extrabold tracking-wide sm:tracking-[0.15em] text-slate-900 uppercase'>
-                                Dmax Lanka
-                            </span>
-                            <span className='text-[9px] sm:text-[10px] font-bold tracking-[0.2em] sm:tracking-[0.3em] text-slate-500 uppercase mt-0.5 group-hover:text-slate-800 transition-colors hidden sm:block'>
-                                Private Limited
-                            </span>
-                        </div>
-                    </Link>
-                </div>
-
-                {/* --- Center: Desktop Navigation - ADJUSTED FOR FAR LEFT SHIFT --- */}
-                <ul className='hidden sm:flex gap-8 lg:gap-10 text-xs font-bold tracking-widest text-slate-600 uppercase ml-8 lg:ml-16'>
+                {/* --- 2. CENTER: DESKTOP NAVIGATION --- */}
+                <ul className='hidden sm:flex items-center gap-8 lg:gap-12 text-xs font-bold tracking-widest text-slate-600 uppercase absolute left-1/2 transform -translate-x-1/2'>
                     {navItems.map((item) => (
                         <NavLink 
-                            key={item}
-                            to={item === 'HOME' ? '/' : `/${item.toLowerCase()}`}
+                            key={item.name}
+                            to={item.path}
                             className={({ isActive }) => 
                                 `relative py-2 px-1 group transition-colors duration-300 ${isActive ? 'text-black' : 'hover:text-black'}`
                             }
                         >
-                            <span className='relative z-10'>{item}</span>
+                            <span className='relative z-10'>{item.name}</span>
                             <span className={`absolute bottom-0 left-0 h-[2px] bg-black transition-all duration-300 ease-out ${
-                                location.pathname === (item === 'HOME' ? '/' : `/${item.toLowerCase()}`)
+                                location.pathname === item.path
                                     ? 'w-full opacity-100'
                                     : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
                             }`}></span>
@@ -108,182 +86,105 @@ const Navbar = () => {
                     ))}
                 </ul>
 
-                {/* --- Right Side: Icons - ADJUSTED FOR BALANCE --- */}
-                <div className='flex items-center gap-2 sm:gap-3'>
+                {/* --- 3. RIGHT: ICONS --- */}
+                <div className='flex items-center gap-3 sm:gap-5'>
+                    
                     {/* Search Icon */}
-                    <div className='p-2 rounded-full hover:bg-slate-100 active:bg-slate-200 transition-colors duration-200 cursor-pointer group'>
-                        <img src={assets.search_icon} className='w-4 h-4 sm:w-5 sm:h-5 opacity-70 group-hover:opacity-100 transition-opacity' alt="Search" />
+                    <div onClick={() => navigate('/collection')} className='p-2 rounded-full hover:bg-slate-100 cursor-pointer group transition-colors'>
+                        <img src={assets.search_icon} className='w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity' alt="Search" />
                     </div>
 
-                    {/* Profile Icon with Dropdown */}
+                    {/* Profile Dropdown */}
                     <div className='group relative'>
-                        <div className='p-2 rounded-full hover:bg-slate-100 active:bg-slate-200 transition-colors duration-200 cursor-pointer'>
-                            <img src={assets.profile_icon} className='w-4 h-4 sm:w-5 sm:h-5 opacity-70 group-hover:opacity-100 transition-opacity' alt="Profile" />
+                        <div onClick={() => navigate('/login')} className='p-2 rounded-full hover:bg-slate-100 cursor-pointer transition-colors'>
+                            <img src={assets.profile_icon} className='w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity' alt="Profile" />
                         </div>
-                        <div className='group-hover:block hidden absolute right-0 pt-2 w-48 animate-fadeIn z-50'>
-                            <div className='bg-white rounded-lg shadow-xl border border-slate-100 overflow-hidden py-1'>
-                                <div className='px-4 py-3 text-xs text-slate-500 border-b border-slate-100'>
-                                    Signed in as <br/>
-                                    <span className='font-bold text-slate-800'>Guest User</span>
-                                </div>
-                                <Link 
-                                    to='/profile' 
-                                    className='block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-black transition-colors'
-                                    onClick={() => setVisible(false)}
-                                >
-                                    My Profile
-                                </Link>
-                                <Link 
-                                    to='/orders' 
-                                    className='block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-black transition-colors'
-                                    onClick={() => setVisible(false)}
-                                >
-                                    Orders
-                                </Link>
-                                <div className='border-t border-slate-100 mt-1'></div>
-                                <button className='block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors'>
-                                    Logout
-                                </button>
+                        {/* Dropdown Menu */}
+                        <div className='group-hover:block hidden absolute right-0 pt-4 z-50'>
+                            <div className='flex flex-col gap-2 w-40 py-3 px-5 bg-white text-gray-500 rounded-lg shadow-xl border border-gray-100'>
+                                <p className='cursor-pointer hover:text-black hover:bg-gray-50 px-2 py-1 rounded transition-colors'>My Profile</p>
+                                <p onClick={() => navigate('/orders')} className='cursor-pointer hover:text-black hover:bg-gray-50 px-2 py-1 rounded transition-colors'>Orders</p>
+                                <p onClick={() => navigate('/login')} className='cursor-pointer hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded transition-colors'>Logout</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Cart Icon */}
-                    <Link 
-                        to='/cart' 
-                        className='group relative p-2 rounded-full hover:bg-slate-100 active:bg-slate-200 transition-colors duration-200'
-                        onClick={() => setVisible(false)}
-                    >
-                        <img src={assets.cart_icon} className='w-4 h-4 sm:w-5 sm:h-5 opacity-70 group-hover:opacity-100 transition-opacity' alt="Cart" />
-                        <span className='absolute top-0.5 right-0.5 h-3.5 w-3.5 sm:h-4 sm:w-4 bg-red-600 text-white text-[8px] sm:text-[9px] font-bold flex items-center justify-center rounded-full ring-1 sm:ring-2 ring-white'>
-                            10
+                    <Link to='/cart' className='group relative p-2 rounded-full hover:bg-slate-100 transition-colors'>
+                        <img src={assets.cart_icon} className='w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity' alt="Cart" />
+                        <span className='absolute -top-1 -right-1 h-4 w-4 bg-red-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full ring-2 ring-white shadow-sm'>
+                            {getCartCount()}
                         </span>
                     </Link>
+
+                    {/* Mobile Menu Toggle Button */}
+                    <button onClick={() => setVisible(true)} className='sm:hidden p-2 -mr-2 rounded-full hover:bg-gray-100 transition-colors'>
+                        <img src={assets.menu_icon} className='w-6 h-6 opacity-80' alt="Menu" />
+                    </button>
                 </div>
 
-                {/* --- Mobile Fullscreen Menu --- */}
-                <div className={`sm:hidden fixed inset-0 bg-white z-40 transform transition-transform duration-300 ease-out ${
-                    visible ? 'translate-x-0' : '-translate-x-full'
-                }`}>
-                    
-                    {/* Mobile Menu Header */}
-                    <div className='flex items-center justify-between p-6 border-b border-gray-100 bg-white'>
-                        <div className='flex items-center gap-3'>
-                            <img 
-                                src={assets.logo} 
-                                className='w-10 object-contain mix-blend-multiply' 
-                                alt="Dmax Lanka" 
-                            />
-                            <div className='flex flex-col leading-tight'>
-                                <span className='text-lg font-extrabold tracking-wide text-slate-900 uppercase'>
-                                    Dmax Lanka
-                                </span>
-                                <span className='text-[10px] font-bold tracking-[0.2em] text-slate-500 uppercase mt-0.5'>
-                                    Private Limited
-                                </span>
+                {/* --- 4. MOBILE MENU SIDEBAR --- */}
+                <div className={`fixed top-0 right-0 bottom-0 bg-white z-50 transition-all duration-300 ease-in-out shadow-2xl overflow-hidden ${visible ? 'w-[85%] sm:w-[350px]' : 'w-0'}`}>
+                    <div className='flex flex-col h-full overflow-y-auto'>
+                        
+                        {/* Header */}
+                        <div className='flex items-center justify-between p-5 border-b border-gray-100 bg-white sticky top-0 z-10'>
+                            <div className='flex items-center gap-3'>
+                                <img src={assets.logo} className='w-8 object-contain mix-blend-multiply' alt="Logo" />
+                                <span className='font-bold text-lg tracking-wider text-slate-900'>MENU</span>
+                            </div>
+                            <div onClick={() => setVisible(false)} className='p-2 bg-gray-50 rounded-full cursor-pointer hover:bg-gray-100'>
+                                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </div>
                         </div>
-                        <button 
-                            onClick={() => setVisible(false)}
-                            className='p-2 -mr-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors duration-200'
-                            aria-label="Close menu"
-                        >
-                            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    {/* Mobile Menu Content */}
-                    <div className='h-[calc(100vh-80px)] overflow-y-auto px-4 py-6'>
+                        
                         {/* Navigation Links */}
-                        <div className='flex flex-col gap-1 mb-8'>
+                        <div className='flex flex-col p-4'>
                             {navItems.map((item) => (
                                 <NavLink 
-                                    key={item}
-                                    to={item === 'HOME' ? '/' : `/${item.toLowerCase()}`}
+                                    key={item.name} 
+                                    onClick={() => setVisible(false)} 
                                     className={({ isActive }) => 
-                                        `py-4 px-6 rounded-xl text-base font-bold tracking-wide transition-all flex items-center gap-3 ${
-                                            isActive 
-                                                ? 'bg-black text-white shadow-md' 
-                                                : 'text-slate-700 hover:bg-gray-50 active:bg-gray-100'
-                                        }`
+                                        `py-4 px-4 rounded-xl text-sm font-bold tracking-wider mb-1 transition-colors ${isActive ? 'bg-black text-white shadow-md' : 'text-slate-600 hover:bg-gray-50'}`
                                     }
-                                    onClick={() => setVisible(false)}
+                                    to={item.path}
                                 >
-                                    <div className={`w-1.5 h-1.5 rounded-full ${
-                                        location.pathname === (item === 'HOME' ? '/' : `/${item.toLowerCase()}`)
-                                            ? 'bg-white'
-                                            : 'bg-gray-300'
-                                    }`}></div>
-                                    {item}
+                                    {item.name}
                                 </NavLink>
                             ))}
                         </div>
 
-                        {/* Quick Actions */}
-                        <div className='border-t border-gray-100 pt-6 mb-8'>
-                            <h3 className='text-xs font-bold tracking-widest text-slate-500 uppercase mb-4 px-4'>
-                                Quick Actions
-                            </h3>
+                        {/* Quick Actions Section */}
+                        <div className='border-t border-gray-100 p-4 mt-auto mb-4'>
+                            <h3 className='text-xs font-bold tracking-widest text-slate-400 uppercase mb-3 px-2'>Quick Actions</h3>
                             <div className='flex flex-col gap-2'>
-                                <Link 
-                                    to='/profile' 
-                                    className='flex items-center gap-3 py-3 px-6 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors'
-                                    onClick={() => setVisible(false)}
-                                >
-                                    <img src={assets.profile_icon} className='w-5 h-5 opacity-70' alt="Profile" />
-                                    <span className='font-medium text-slate-700'>My Profile</span>
+                                <Link to='/profile' onClick={() => setVisible(false)} className='flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-50 text-slate-600 font-medium text-sm'>
+                                    <img src={assets.profile_icon} className='w-4 h-4 opacity-60' alt="" /> My Profile
                                 </Link>
-                                <Link 
-                                    to='/orders' 
-                                    className='flex items-center gap-3 py-3 px-6 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors'
-                                    onClick={() => setVisible(false)}
-                                >
-                                    <img src={assets.profile_icon} className='w-5 h-5 opacity-70 rotate-90' alt="Orders" />
-                                    <span className='font-medium text-slate-700'>My Orders</span>
+                                <Link to='/orders' onClick={() => setVisible(false)} className='flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-50 text-slate-600 font-medium text-sm'>
+                                    <img src={assets.profile_icon} className='w-4 h-4 opacity-60 rotate-90' alt="" /> My Orders
                                 </Link>
-                                <Link 
-                                    to='/cart' 
-                                    className='flex items-center gap-3 py-3 px-6 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors'
-                                    onClick={() => setVisible(false)}
-                                >
-                                    <img src={assets.cart_icon} className='w-5 h-5 opacity-70' alt="Cart" />
-                                    <span className='font-medium text-slate-700'>Shopping Cart</span>
-                                    <span className='ml-auto bg-red-600 text-white text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full'>
-                                        10
-                                    </span>
+                                <Link to='/cart' onClick={() => setVisible(false)} className='flex items-center gap-3 py-3 px-4 rounded-lg hover:bg-gray-50 text-slate-600 font-medium text-sm'>
+                                    <img src={assets.cart_icon} className='w-4 h-4 opacity-60' alt="" /> Shopping Cart 
+                                    <span className='ml-auto bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full'>{getCartCount()}</span>
                                 </Link>
                             </div>
                         </div>
 
                         {/* Brand Footer */}
-                        <div className='border-t border-gray-100 pt-6 px-4'>
-                            <div className='text-center'>
-                                <p className='text-lg font-extrabold tracking-wide text-slate-900 uppercase mb-1'>
-                                    Dmax Lanka
-                                </p>
-                                <p className='text-[10px] font-bold tracking-[0.3em] text-slate-500 uppercase mb-3'>
-                                    Private Limited
-                                </p>
-                                <p className='text-sm text-slate-600 italic'>
-                                    Premium Bags & Accessories
-                                </p>
-                                <p className='text-xs text-slate-400 mt-2'>
-                                    Crafting quality since 2010
-                                </p>
-                            </div>
+                        <div className='bg-gray-50 p-6 text-center border-t border-gray-100'>
+                            <p className='text-sm font-extrabold tracking-wide text-slate-900 uppercase'>Dmax Lanka</p>
+                            <p className='text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase mt-1'>Private Limited</p>
                         </div>
+
                     </div>
                 </div>
 
-                {/* Mobile Menu Overlay */}
-                {visible && (
-                    <div 
-                        className='sm:hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-30'
-                        onClick={() => setVisible(false)}
-                    />
-                )}
+                {/* Mobile Overlay */}
+                <div 
+                    onClick={() => setVisible(false)}
+                    className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 sm:hidden ${visible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                ></div>
             </div>
         </nav>
     )

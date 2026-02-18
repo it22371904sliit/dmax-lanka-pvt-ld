@@ -1,10 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-// 1. You must import ToastContainer and its CSS
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Components
 import Navbar from './Components/Navbar';
+
+
+// Pages
 import Home from './Pages/Home';
 import Collection from './Pages/Collection';
 import About from './Pages/About';
@@ -13,33 +16,46 @@ import Cart from './Pages/Cart';
 import Login from './Pages/Login';
 import PlaceOrder from './Pages/PlaceOrder';
 import Orders from './Pages/Orders';
-import ProductPage from './Pages/Product';
+import Product from './Pages/Product'; // Renamed to match the Product.jsx file
 
 const App = () => {
   return (
-    <div className='bg-white min-h-screen w-full'>
-      {/* ToastContainer will now work correctly */}
-      <ToastContainer position="bottom-right" theme="dark" />
+    <div className='bg-white min-h-screen w-full flex flex-col selection:bg-[#B8987E] selection:text-white'>
+      {/* Toast Notification Container with Luxury Theme */}
+      <ToastContainer position="bottom-right" theme="light" autoClose={3000} />
       
-      {/* Navbar stays full width */}
+      {/* Navbar Component - Fixed at top for elite navigation */}
       <Navbar />
 
-      {/* Main content is now full-width so Home.jsx can be edge-to-edge */}
-      <main className='w-full'>
+      {/* Main Content Area */}
+      <main className='flex-grow w-full'>
         <Routes>
           <Route path='/' element={<Home />} />
           
-          {/* We add padding manually to these specific pages so they don't touch the edges */}
-          <Route path='/collection' element={<div className='px-4 md:px-[9vw]'><Collection /></div>} />
-          <Route path='/about' element={<div className='px-4 md:px-[9vw]'><About /></div>} />
-          <Route path='/contact' element={<div className='px-4 md:px-[9vw]'><Contact /></div>} />
-          <Route path='/product/:productId' element={<div className='px-4 md:px-[9vw]'><ProductPage /></div>} />
-          <Route path='/cart' element={<div className='px-4 md:px-[9vw]'><Cart /></div>} />
-          <Route path='/login' element={<div className='px-4 md:px-[9vw]'><Login /></div>} />
-          <Route path='/placeorder' element={<div className='px-4 md:px-[9vw]'><PlaceOrder /></div>} />
-          <Route path='/orders' element={<div className='px-4 md:px-[9vw]'><Orders /></div>} />
+          {/* Collection: Using wide containers for the gallery */}
+          <Route path='/collection' element={<Collection />} />
+          
+          <Route path='/about' element={<div className='max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-10'><About /></div>} />
+          
+          <Route path='/contact' element={<div className='max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-10'><Contact /></div>} />
+          
+          {/* Product Page: Removed wrapper padding to allow the luxury gallery to breathe */}
+          <Route path='/product/:productId' element={<Product />} />
+          
+          <Route path='/cart' element={<div className='max-w-[1200px] mx-auto px-4 sm:px-6 pt-10'><Cart /></div>} />
+          
+          <Route path='/login' element={<div className='max-w-[1440px] mx-auto px-4 pt-10'><Login /></div>} />
+          
+          <Route path='/place-order' element={<div className='max-w-[1440px] mx-auto px-4 pt-10'><PlaceOrder /></div>} />
+          
+          <Route path='/orders' element={<div className='max-w-[1440px] mx-auto px-4 pt-10'><Orders /></div>} />
+          
+          {/* Fallback route */}
+          <Route path='*' element={<Home />} />
         </Routes>
       </main>
+      
+      
     </div>
   )
 }
